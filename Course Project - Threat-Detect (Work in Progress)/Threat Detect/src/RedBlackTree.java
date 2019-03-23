@@ -1,10 +1,5 @@
 import java.io.IOException;
 
-/**
- * @author Michael Barreiros
- *
- * 
- */
 public class RedBlackTree<String extends Comparable<String>, States> {
 
 	private static final boolean RED = true;
@@ -20,8 +15,8 @@ public class RedBlackTree<String extends Comparable<String>, States> {
 		private boolean colour;
 		private int size;
 		
-		public Node(String name, States state, boolean colour, int size) {
-			this.key= name;
+		public Node(String key,States state, boolean colour, int size) {
+			this.key= key;
 			this.state = state;
 			this.colour = colour;
 			this.size = size;
@@ -118,7 +113,7 @@ public class RedBlackTree<String extends Comparable<String>, States> {
 	 ******************************************************************************/
 	
 	public void put(String key, States state) {
-		//if (key == null) throw new IOException("Error: Key is null")
+		//if (key == null) throw new IOException("state not initiated");
 		
 		root = put(root, key, state);
 		root.colour = BLACK;
@@ -162,6 +157,30 @@ public class RedBlackTree<String extends Comparable<String>, States> {
 		return x;
 	}
 	
+	/**
+	 * 
+	 * @param h Node being rotated
+	 * @return Node after rotations
+	 */
+	private Node rotateLeft(Node h) {
+		Node x = h.right;
+		h.right = x.left;
+		x.left = h;
+		x.colour = x.left.colour;
+		x.left.colour = RED;
+		x.size = h.size;
+		h.size = size(h.left)+ size(h.right) + 1;  
+		return x;
+	}
 	
+	/**
+	 * 
+	 * @param h Node who's colours are to be flipped
+	 */
+	private void flipColours(Node h) {
+		h.colour = !h.colour;
+		h.left.colour = !h.left.colour;
+		h.right.colour = !h.right.colour;
+	}
 	
 }

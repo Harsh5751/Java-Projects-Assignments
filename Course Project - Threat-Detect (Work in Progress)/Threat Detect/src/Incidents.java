@@ -51,11 +51,11 @@ public class Incidents implements Comparable<Incidents> {
 		return latitude;
 	}
 
-	public void setUserLatitude() {
+	public void setUserLatitude(double userLatitude) {
 		this.userLatitude = userLatitude;
 	}
 
-	public void setUserLongitude() {
+	public void setUserLongitude(double userLongitude) {
 		this.userLongitude = userLongitude;
 	}
 
@@ -91,7 +91,11 @@ public class Incidents implements Comparable<Incidents> {
 	public String toString() {
 		return String.format("");
 	}
-
+	
+	/*public double getDistance() {
+		return toDistance(latitude, longitude, userLatitude, userLongitude);
+	}*/
+	
 	@Override
 	public int compareTo(Incidents that) {
 		if (this.toDistance(latitude, longitude, userLatitude, userLongitude) > that.toDistance(latitude, longitude, userLatitude, userLongitude)) {
@@ -104,5 +108,4 @@ public class Incidents implements Comparable<Incidents> {
 			return 0;
 		}
 	}
-
 }
