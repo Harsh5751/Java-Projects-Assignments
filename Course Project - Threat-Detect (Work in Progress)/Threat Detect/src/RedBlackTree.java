@@ -1,5 +1,10 @@
 import java.io.IOException;
 
+/**
+ * @author Michael Barreiros
+ *
+ * 
+ */
 public class RedBlackTree<String extends Comparable<String>, States> {
 
 	private static final boolean RED = true;

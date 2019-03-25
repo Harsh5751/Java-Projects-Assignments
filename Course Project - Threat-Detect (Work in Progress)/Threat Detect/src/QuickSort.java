@@ -3,6 +3,7 @@ import java.util.Random;
 
 /**
  * 
+ * @author Michael Barreiros
  *
  * Citation: ArrayList implementation of QuickSort is referencing
  * https://www.withexample.com/quicksort-implementation-example-using-arraylist-java/
