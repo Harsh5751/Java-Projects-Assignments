@@ -1,0 +1,30 @@
+3.1 Analysis:
+A directional graph(digraph) will be used to solve this problem because it has cities
+and nodes connected in only one direction (unidirectional), which gives the correct path
+from one location to another. The nodes of the graph will represent the cities provided in
+the USCities file. There will be a total of 32 nodes, one representing a different city thats
+possible to travel to. The edges connecting the nodes will represent the path from one city to
+another, but it will be one directional so you can only travel one way. For example, from Boston to 
+New York City, but you can't go from New York City to Boston. In 3.4, the edges will represent
+the path and have a weight value attached to it representing the cost of the meal in the city
+travelling to as the goal is minimize the cost as well as having the shortest path. A Edge-Weighted API
+from Princeton's website will be used to represent this, and then Dijkstra's algorithm will be used to find
+the shortest and cost minimized path from the start location to the end. The food places will be read from the file
+and based on passing the constraint the type of food place will be mapped to the appropriate city, and weight will be the 
+minimum food cost of the restaurant selected
+
+3.2 Breadth Vs Depth:
+Breadth-First-Paths found the result in the fewest steps compared to Depth-First-Paths.This will 
+remain true even if the number of stops increases. This is because Breadth-First-Paths always returns
+the shortest path or in the fewest steps.
+
+3.4 Analysis:
+The algorithm used to solve this problem was Dijkstra's shortest path with min-priority queue(IndexMinPQ).
+The complexity Dijkstra's using the min-priority queue(IndexMinPQ) is O(|E|+|V|log|V|), where E represents 
+the number of edges and V represents the number of vertices. The time complexity will remain the same if the
+number of cities increases, because in the complexity, the number of cities represent the number of vertexes V.
+The number of stops will also not change the complexity of this problem because the number of stops will always 
+remain the same as the algorithm always gets the shortest one, and number of stops would only increase if the cities
+connected increases or cities in general, which also does not change the complexity, so number of stops will not change the 
+complexity. The number of restaurants will also not change the complexity, because that component is not part of
+Dijktra's algorithm, and it only represents the weight on the edge, therefore it does not effect the complexity.

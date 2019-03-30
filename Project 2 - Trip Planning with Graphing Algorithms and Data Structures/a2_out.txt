@@ -1,0 +1,19 @@
+3.2 - Breadth-First and Depth-First:
+Depth-First DirectedPaths:
+DFS - BOSTON to MINNEAPOLIS: BOSTON, NEW YORK CITY, PITTSBURGH, COLUMBUS, CHICAGO, ST. LOUIS, KANSAS CITY, MINNEAPOLIS
+
+Breadth-First DirectedPaths:
+BFS - BOSTON to MINNEAPOLIS: BOSTON, NEW YORK CITY, PITTSBURGH, COLUMBUS, CHICAGO, MINNEAPOLIS
+
+3.4 - Table of Results of Path from Dijkstra's Shortest Path
+City				Meal Choice		 Cost per meal
+BOSTON    				N/A              N/A
+NEW YORK CITY		McChicken 			 3.79
+PITTSBURGH     Double Cheeseburger		 4.38
+COLUMBUS			McChicken 			 3.79
+CHICAGO     	Double Cheeseburger		 4.38
+MINNEAPOLIS			McChicken 			 3.79
+
+3.4 Normal Output:
+Using Dijkstra's Shortest Path to get Cheapest Trip:
+BOSTON to MINNEAPOLIS (20.13):  BOSTON -> NEW YORK CITY  (3.79)   NEW YORK CITY -> PITTSBURGH  (4.38)   PITTSBURGH -> COLUMBUS  (3.79)   COLUMBUS -> CHICAGO  (4.38)   CHICAGO -> MINNEAPOLIS  (3.79)   

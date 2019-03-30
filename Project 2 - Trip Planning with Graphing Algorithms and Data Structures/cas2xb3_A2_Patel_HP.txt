@@ -1,0 +1,29 @@
+SFWR ENG 2XB3
+Harsh Patel
+The fact that the work being submitted by me is my individual work.
+
+IMPORTANT: 
+Algorithms for most of the implementation is from https://algs4.cs.princeton.edu/home/
+with small modifications made to serve the purpose of this assignment 
+
+IMPORTANT: 
+Note no classes or files have main except the TripPlanner.java, so please run that to 
+get the console output path for Depth-First DirectedPaths, Breadth-First DirectedPaths, and
+Using Dijkstra's Shortest Path to get Cheapest Trip path.
+
+IMPORTANT:
+Code and algorithm for constraints accounted for (i.e. one restaurant per city, each item once before repeat)
+is all in the TripPlanner.java file where the files containing menu items and restuaraunts is being parsed
+and checking if its in +0.5 and -0.5 longitude and latitude of the city's location, please visit that.
+
+IMPORTANT: 
+Edge weights are created and assigned in TripPlanner.java which are minimum and second minimum
+food prices, and alternating as we can't have the same meal
+Running tripPlannar will output:
+Depth-First DirectedPaths:
+DFS - BOSTON to MINNEAPOLIS: BOSTON, NEW YORK CITY, PITTSBURGH, COLUMBUS, CHICAGO, ST. LOUIS, KANSAS CITY, MINNEAPOLIS
+Breadth-First DirectedPaths:
+BFS - BOSTON to MINNEAPOLIS: BOSTON, NEW YORK CITY, PITTSBURGH, COLUMBUS, CHICAGO, MINNEAPOLIS
+Using Dijkstra's Shortest Path to get Cheapest Trip:
+BOSTON to MINNEAPOLIS (20.13)  BOSTON -> NEW YORK CITY  (3.79)   NEW YORK CITY -> PITTSBURGH  (4.38)   PITTSBURGH -> COLUMBUS  (3.79)   COLUMBUS -> CHICAGO  (4.38)   CHICAGO -> MINNEAPOLIS  (3.79)   
+ 
