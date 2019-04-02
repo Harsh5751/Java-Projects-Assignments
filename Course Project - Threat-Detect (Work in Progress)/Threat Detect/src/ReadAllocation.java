@@ -5,19 +5,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+import javax.swing.*;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.maps.model.LatLng;
 
 import geocoding.GeocodingException;
 import geocoding.GeocodingImpl;
 
 public class ReadAllocation {
-	public static ArrayList<String> read() throws IOException {
+	public static ArrayList<String> read(String file) throws IOException {
 		ArrayList<String> incidents = new ArrayList<>();
 		try {
-			Scanner input = new Scanner(new File("data\\test_read_300_rows.csv"), "UTF-8");
+			Scanner input = new Scanner(new File(file), "UTF-8");
 			String previousString = input.nextLine(); // This reads and skips the first line of the file which is just
 														// naming for the data
 
@@ -92,7 +95,6 @@ public class ReadAllocation {
 	public static ArrayList<Incidents> filterIncidents(ArrayList<Incidents> InRangeIncidents, double Range) {
 		int sizeofInci = InRangeIncidents.size();
 		ArrayList<Incidents> InRangeIncidents2 = new ArrayList<Incidents>();
-		System.out.println(sizeofInci);
 		for (int i = 0; i < sizeofInci; i++) {
 			if (InRangeIncidents.get(i).getDisToIncident() <= Range) {
 				InRangeIncidents2.add(InRangeIncidents.get(i));
@@ -102,7 +104,8 @@ public class ReadAllocation {
 	}
 
 	public static void main(String args[]) throws IOException, GeocodingException {
-		ArrayList<String> strIncidents = read();
+		
+		ArrayList<String> strIncidents = read("data\\test_read_300_rows.csv");
 		ArrayList<Incidents> Incidents = buildIncidents(strIncidents);
 		RedBlackTree<String, States> StateTree = buildBST(Incidents);
 
@@ -110,16 +113,19 @@ public class ReadAllocation {
 		String address;
 		System.out.print("Enter an address: ");
 		address = user_input.nextLine();
-		System.out.println(address);
 
 		Scanner user_input1 = new Scanner(System.in);
 		String UserState;
 		System.out.print("Enter a State: ");
 		UserState = user_input1.next();
+		if(!(StateTree.contains(UserState))) {
+			System.out.println("No Incidents in this area");
+			return;
+		}
 
 		Scanner user_input2 = new Scanner(System.in);
 		String Range;
-		System.out.print("Enter a range between 0 to 8 km: ");
+		System.out.print("Enter a Range between 0 to 8 km: ");
 		Range = (user_input2.next());
 		Double range = Double.parseDouble(Range);
 
@@ -131,8 +137,13 @@ public class ReadAllocation {
 
 		ArrayList<Incidents> stateIncidents = SortIncidents(userState, userLong, userLat);
 		ArrayList<Incidents> InRangeIncidents = filterIncidents(stateIncidents, range);
-
-		System.out.println("Gun violence incidents near " + address + " in range " + range + "km");
+		
+		System.out.println("");
+		if (InRangeIncidents.size() == 0) {
+			System.out.println("No Incidents in this area or in range");
+			return;
+		}
+		System.out.println("Gun violence incidents near " + address + " in range " + range + " km: ");
 		for (int i = 0; i < InRangeIncidents.size(); i++) {
 			System.out.println(InRangeIncidents.get(i).toString());
 		}
