@@ -14,6 +14,7 @@ public class Incidents implements Comparable<Incidents> {
 	private double dangerLevel;
 	private double userLongitude = 0;
 	private double userLatitude = 0;
+	private double disToIncident = 0;
 
 	public Incidents(String UId, String address, String State, String City, double longitude, double latitude,
 			int numKilled, int numInjured) {
@@ -84,8 +85,13 @@ public class Incidents implements Comparable<Incidents> {
 			dist = Math.acos(dist);
 			dist = Math.toDegrees(dist);
 			dist = dist * 60 * 1.1515;
+			disToIncident = dist;
 			return (dist);
 		}
+	}
+	
+	public double getDisToIncident() {
+		return disToIncident;
 	}
 
 	public String toString() {
