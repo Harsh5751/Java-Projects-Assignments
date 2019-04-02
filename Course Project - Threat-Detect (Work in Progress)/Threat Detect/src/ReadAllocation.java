@@ -7,87 +7,76 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ReadAllocation{
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import geocoding.GeocodingException;
+import geocoding.GeocodingImpl;
+
+public class ReadAllocation {
 	public static ArrayList<String> read() throws IOException {
 		ArrayList<String> incidents = new ArrayList<>();
 		try {
 			Scanner input = new Scanner(new File("data\\test_read_300_rows.csv"), "UTF-8");
-			String previousString = input.nextLine(); //This reads and skips the first line of the file which is just naming for the data
-			
-			while(input.hasNextLine()) {
+			String previousString = input.nextLine(); // This reads and skips the first line of the file which is just
+														// naming for the data
+
+			while (input.hasNextLine()) {
 				String line = input.nextLine();
 				if (line.equals("")) {
-					
+
 					String newLine = input.nextLine();
-					while(newLine.equals("")) newLine=input.nextLine();
-					//String full = previousString + newLine;
-					//incidents.add(full);
-					//String[] columns = full.split(",");
-					//System.out.println(full);
+					while (newLine.equals(""))
+						newLine = input.nextLine();
 					continue;
 				}
-				previousString = line; //Dealing with spaces in our dataset
-				//String[] columns = line.split(",");
-				//System.out.println(line);
+				previousString = line;
 				incidents.add(line);
 			}
 			input.close();
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.out.println("File not found");
 		}
 		return incidents;
 	}
-	
+
 	public static ArrayList<Incidents> buildIncidents(ArrayList<String> data) throws IOException {
 		ArrayList<Incidents> incidents = new ArrayList<>();
-		//Writer wr = null;
-		//File f = new File("Data\\demo.txt");
-		//wr = new BufferedWriter(new FileWriter(f));
 		for (int i = 0; i < data.size(); i++) {
-			//System.out.println(i);
-			//System.out.println(data.get(i));
-			//wr.write(data.get(i));
-			//wr.write("\n");
 			String incident = data.get(i);
 			String[] columns = data.get(i).split(",");
-			if (columns[0].equals("") || columns[4].equals("") || columns[2].equals("") || columns[3].equals("") || columns[8].equals("") || columns[7].equals("") || columns[5].equals("") || columns[6].equals("")) {
+			if (columns[0].equals("") || columns[4].equals("") || columns[2].equals("") || columns[3].equals("")
+					|| columns[8].equals("") || columns[7].equals("") || columns[5].equals("")
+					|| columns[6].equals("")) {
 				continue;
 			}
-			Incidents temp = new Incidents(columns[0], columns[4], columns[2], columns[3], Double.parseDouble(columns[8]), Double.parseDouble(columns[7]), Integer.parseInt(columns[5]), Integer.parseInt(columns[6]));
+			Incidents temp = new Incidents(columns[0], columns[4], columns[2], columns[3],
+					Double.parseDouble(columns[8]), Double.parseDouble(columns[7]), Integer.parseInt(columns[5]),
+					Integer.parseInt(columns[6]));
 			incidents.add(temp);
 		}
 		return incidents;
 	}
-	
-	public static RedBlackTree<String, States> buildBST(ArrayList<Incidents> incidents){
+
+	public static RedBlackTree<String, States> buildBST(ArrayList<Incidents> incidents) {
 		RedBlackTree<String, States> StateTree = new RedBlackTree<String, States>();
 		int i = 0;
-		while(i != incidents.size()) {
-			if(StateTree.contains(incidents.get(i).getState())) {
+		while (i != incidents.size()) {
+			if (StateTree.contains(incidents.get(i).getState())) {
 				States state = StateTree.get(incidents.get(i).getState());
 				state.addIncidents(incidents.get(i));
 				StateTree.put(incidents.get(i).getState(), state);
-			}
-			else {
+			} else {
 				States state = new States(incidents.get(i).getState());
 				state.addIncidents(incidents.get(i));
 				StateTree.put(incidents.get(i).getState(), state);
 			}
 			i++;
 		}
-		/*
-		States state = StateTree.get("California");
-		ArrayList<Incidents> inciLst = state.getIncidentsList();
-		for(int j = 0; j < inciLst.size(); j++) {
-			System.out.println(inciLst.get(j).getAddress());
-		}*/
 		return StateTree;
 	}
-	
-	
-	
-	public static ArrayList<Incidents> SortIncidents(States state, double userLong, double userLat){
+
+	public static ArrayList<Incidents> SortIncidents(States state, double userLong, double userLat) {
 		ArrayList<Incidents> SortIncidents = state.getIncidentsList();
 		for (int i = 0; i < SortIncidents.size(); i++) {
 			Incidents incident = SortIncidents.get(i);
@@ -96,24 +85,56 @@ public class ReadAllocation{
 		}
 		QuickSort sortRange = new QuickSort(SortIncidents);
 		sortRange.sortBasicQuick();
+
 		return SortIncidents;
 	}
-	
-	public static ArrayList<Incidents> filterIncidents(ArrayList<Incidents> InRangeIncidents, double Range){
-		for (int i = 0; i < InRangeIncidents.size(); i++) {
-			if (InRangeIncidents.get(i).getDisToIncident() > Range) {
-				InRangeIncidents.remove(i);
+
+	public static ArrayList<Incidents> filterIncidents(ArrayList<Incidents> InRangeIncidents, double Range) {
+		int sizeofInci = InRangeIncidents.size();
+		ArrayList<Incidents> InRangeIncidents2 = new ArrayList<Incidents>();
+		System.out.println(sizeofInci);
+		for (int i = 0; i < sizeofInci; i++) {
+			if (InRangeIncidents.get(i).getDisToIncident() <= Range) {
+				InRangeIncidents2.add(InRangeIncidents.get(i));
 			}
 		}
-		return InRangeIncidents;
-		
+		return InRangeIncidents2;
 	}
-	
-	
-	public static void main(String args[]) throws IOException {
+
+	public static void main(String args[]) throws IOException, GeocodingException {
 		ArrayList<String> strIncidents = read();
 		ArrayList<Incidents> Incidents = buildIncidents(strIncidents);
 		RedBlackTree<String, States> StateTree = buildBST(Incidents);
+
+		Scanner user_input = new Scanner(System.in);
+		String address;
+		System.out.print("Enter an address: ");
+		address = user_input.nextLine();
+		System.out.println(address);
+
+		Scanner user_input1 = new Scanner(System.in);
+		String UserState;
+		System.out.print("Enter a State: ");
+		UserState = user_input1.next();
+
+		Scanner user_input2 = new Scanner(System.in);
+		String Range;
+		System.out.print("Enter a range between 0 to 8 km: ");
+		Range = (user_input2.next());
+		Double range = Double.parseDouble(Range);
+
+		States userState = StateTree.get(UserState);
+		GeocodingImpl geocode = new GeocodingImpl();
+		JsonObject Userlatlong = geocode.getLatLng(address);
+		Double userLong = Double.parseDouble(Userlatlong.get("lng").toString());
+		Double userLat = Double.parseDouble(Userlatlong.get("lat").toString());
+
+		ArrayList<Incidents> stateIncidents = SortIncidents(userState, userLong, userLat);
+		ArrayList<Incidents> InRangeIncidents = filterIncidents(stateIncidents, range);
+
+		System.out.println("Gun violence incidents near " + address + " in range " + range + "km");
+		for (int i = 0; i < InRangeIncidents.size(); i++) {
+			System.out.println(InRangeIncidents.get(i).toString());
+		}
 	}
 }
-

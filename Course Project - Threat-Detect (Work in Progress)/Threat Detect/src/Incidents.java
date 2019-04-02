@@ -95,7 +95,7 @@ public class Incidents implements Comparable<Incidents> {
 	}
 
 	public String toString() {
-		return String.format("");
+		return String.format("id : %s, city : %s, state : %s, address : %s, Killed : %d, Injured : %d, Distance to You: %.2f", UId, City, State, address, numKilled, numInjured, disToIncident);
 	}
 	
 	/*public double getDistance() {
