@@ -104,10 +104,10 @@ public class Incidents implements Comparable<Incidents> {
 	
 	@Override
 	public int compareTo(Incidents that) {
-		if (this.toDistance(latitude, longitude, userLatitude, userLongitude) > that.toDistance(latitude, longitude, userLatitude, userLongitude)) {
+		if (this.toDistance(latitude, longitude, userLatitude, userLongitude) > that.toDistance(that.latitude, that.longitude, userLatitude, userLongitude)) {
 			return 1;
 		} 
-		else if (this.toDistance(latitude, longitude, userLatitude, userLongitude) < that.toDistance(latitude, longitude, userLatitude, userLongitude)) {
+		else if (this.toDistance(latitude, longitude, userLatitude, userLongitude) < that.toDistance(that.latitude, that.longitude, userLatitude, userLongitude)) {
 			return -1;
 		}
 		else {

@@ -185,6 +185,20 @@ public class ReadAllocation {
 			for (int i = 0; i < InRangeIncidents.size(); i++) {
 				System.out.println(InRangeIncidents.get(i).toString());
 			}
+			String DangerLevel;
+		
+			if(InRangeIncidents.size() < 15) {
+				DangerLevel = "LOW DANGER";
+			}
+			else if (15 <= InRangeIncidents.size() && InRangeIncidents.size() < 30 ) {
+				DangerLevel = "MODERATE DANGER";
+			}
+			else {
+				DangerLevel = "HIGH DANGER. Stay Cautious";
+			}
+			System.out.println("");
+			System.out.println("THE DANGER LEVEL IN THIS AREA IS: " + DangerLevel);
+			System.out.println("");
 			user_input.nextLine();
 		}while(true);
 		user_input.close();
