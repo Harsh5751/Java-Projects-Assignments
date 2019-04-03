@@ -64,30 +64,14 @@ public class ReadAllocation {
 		ArrayList<Incidents> incidents = new ArrayList<>();
 		for (int i = 0; i < data.size(); i++) {
 			String incident = data.get(i);
-			//System.out.println(data.get(i));
 			String[] columns = data.get(i).split(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+			
 			if (columns[0].equals("") || columns[4].equals("") || columns[2].equals("") || columns[3].equals("")
 					|| columns[8].equals("") || columns[7].equals("") || columns[5].equals("")
 					|| columns[6].equals("")) {
 				continue;
 			}
-			/*
-			if(columns[0].equals("92405")) {
-				System.out.println("found");
-				int n = 0;
-				while(n != columns.length) {
-					System.out.println(columns[n++]);
-				}
-			}
-			if (columns[4].substring(0,1).equals("\"")) {
-				System.out.println("in if");
-				columns[4] = columns[4] + columns[5];
-				columns[4] = columns[4].replace("\"", "");
-				int removeIndex = 5;
-				for(int j = removeIndex; j < columns.length -1; j++){
-					columns[j] = columns[j + 1];
-				 }
-			}*/
+	
 			Incidents temp = new Incidents(columns[0], columns[4], columns[2], columns[3],
 					Double.parseDouble(columns[8]), Double.parseDouble(columns[7]), Integer.parseInt(columns[5]),
 					Integer.parseInt(columns[6]));
@@ -152,18 +136,17 @@ public class ReadAllocation {
 			
 			if(address.equals("0")) break;
 			
-			//Scanner user_input1 = new Scanner(System.in);
 			String UserState;
 			System.out.print("Enter a State: ");
 			UserState = user_input.nextLine();
 			if(!(StateTree.contains(UserState))) {
 				System.out.println("No Incidents in this area or Wrong Address");
+				//user_input.nextLine();
 				continue;
 			}
 	
-			//Scanner user_input2 = new Scanner(System.in);
 			String Range;
-			System.out.print("Enter a Range between 0 to 8 km: ");
+			System.out.print("Enter a range to look for incidents (in km): ");
 			Range = (user_input.next());
 			Double range = Double.parseDouble(Range);
 	
@@ -179,12 +162,21 @@ public class ReadAllocation {
 			System.out.println("");
 			if (InRangeIncidents.size() == 0) {
 				System.out.println("No Incidents in this area or in range");
+				//user_input.nextLine();
 				continue;
 			}
+			int totalKilled = 0, totalInjured = 0;
 			System.out.println("Gun violence incidents near " + address + " in range " + range + " km: ");
 			for (int i = 0; i < InRangeIncidents.size(); i++) {
 				System.out.println(InRangeIncidents.get(i).toString());
+				totalKilled = totalKilled + InRangeIncidents.get(i).getnumKilled();
+				totalInjured = totalInjured + InRangeIncidents.get(i).getnumInjured();
 			}
+			
+			System.out.println("");
+			System.out.println("Total Killed: " + totalKilled + "\n" +
+								"Total Injured: " + totalInjured);
+			
 			String DangerLevel;
 		
 			if(InRangeIncidents.size() < 15) {

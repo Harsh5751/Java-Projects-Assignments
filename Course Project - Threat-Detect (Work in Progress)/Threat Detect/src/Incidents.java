@@ -84,7 +84,8 @@ public class Incidents implements Comparable<Incidents> {
 					+ Math.cos(Math.toRadians(latitude)) * Math.cos(Math.toRadians(userLatitude)) * Math.cos(Math.toRadians(theta));
 			dist = Math.acos(dist);
 			dist = Math.toDegrees(dist);
-			dist = dist * 60 * 1.1515;
+			dist = dist * 60 * 1.1515; //Calculates distance in miles
+			dist = dist * 1.609344; //Converts from miles to km
 			disToIncident = dist;
 			return (dist);
 		}
@@ -98,16 +99,12 @@ public class Incidents implements Comparable<Incidents> {
 		return String.format("id : %s, city : %s, state : %s, address : %s, Killed : %d, Injured : %d, Distance to You: %.2f", UId, City, State, address, numKilled, numInjured, disToIncident);
 	}
 	
-	/*public double getDistance() {
-		return toDistance(latitude, longitude, userLatitude, userLongitude);
-	}*/
-	
 	@Override
 	public int compareTo(Incidents that) {
-		if (this.toDistance(latitude, longitude, userLatitude, userLongitude) > that.toDistance(that.latitude, that.longitude, userLatitude, userLongitude)) {
+		if (this.toDistance(latitude, longitude, userLatitude, userLongitude) > that.toDistance(that.getLatitude(), that.getLongitude(), userLatitude, userLongitude)) {
 			return 1;
 		} 
-		else if (this.toDistance(latitude, longitude, userLatitude, userLongitude) < that.toDistance(that.latitude, that.longitude, userLatitude, userLongitude)) {
+		else if (this.toDistance(latitude, longitude, userLatitude, userLongitude) < that.toDistance(that.getLatitude(), that.getLongitude(), userLatitude, userLongitude)) {
 			return -1;
 		}
 		else {

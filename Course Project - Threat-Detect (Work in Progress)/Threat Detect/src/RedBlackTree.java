@@ -12,7 +12,7 @@ public class RedBlackTree<String extends Comparable<String>, States> {
 	
 	private Node root;
 	
-	
+	//BST helper node data type
 	private class Node{
 		private String key;
 		private States state;

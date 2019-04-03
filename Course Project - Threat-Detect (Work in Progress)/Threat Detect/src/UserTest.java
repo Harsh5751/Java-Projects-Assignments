@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import geocoding.*;
 
 public class UserTest {
-	public static void main (String [] args) throws GeocodingException {
+	/*public static void main (String [] args) throws GeocodingException {
 		System.out.println("Enter address");
 		Scanner sc = new Scanner (System.in);
 		String userAddress = sc.nextLine();
@@ -20,5 +20,5 @@ public class UserTest {
         System.out.println(longitude);
 
 	
-	}
+	}*/
 }
