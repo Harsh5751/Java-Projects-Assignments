@@ -123,8 +123,19 @@ public class ReadAllocation {
 	}
 
 	public static void main(String args[]) throws IOException, GeocodingException {
+		ArrayList<String> strIncidents;
+		String system;
+		Scanner askUser = new Scanner(System.in);
+		System.out.print("Enter OS to configure file path. Type Windows or Mac: ");
+		system = askUser.nextLine();
+		if (system.equals("Mac")) {
+			strIncidents = read("Data/gun-violence-data_01-2013_03-2018.csv");
+		} else {
+			strIncidents = read("Data\\gun-violence-data_01-2013_03-2018.csv");
+		}
 		
-		ArrayList<String> strIncidents = read("data\\gun-violence-data_01-2013_03-2018.csv");
+		System.out.println("Building graph tree of States. Give 30 seconds ");
+
 		ArrayList<Incidents> Incidents = buildIncidents(strIncidents);
 		RedBlackTree<String, States> StateTree = buildBST(Incidents);
 
@@ -174,7 +185,8 @@ public class ReadAllocation {
 			}
 			
 			System.out.println("");
-			System.out.println("Total Killed: " + totalKilled + "\n" +
+			System.out.println("Total Incidents: " + InRangeIncidents.size() + "\n" +
+								"Total Killed: " + totalKilled + "\n" +
 								"Total Injured: " + totalInjured);
 			
 			String DangerLevel;
@@ -194,5 +206,6 @@ public class ReadAllocation {
 			user_input.nextLine();
 		}while(true);
 		user_input.close();
+		askUser.close();
 	}
 }
