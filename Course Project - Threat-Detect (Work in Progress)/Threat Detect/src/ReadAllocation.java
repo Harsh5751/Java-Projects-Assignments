@@ -18,11 +18,20 @@ import geocoding.GeocodingException;
 import geocoding.GeocodingImpl;
 
 /**
- * @author Michael Barreiros, Harsh Patel
- *
+ * Reads from file and presents gun violence incidents to user based on filter conditions
  * 
+ * @author Michael Barreiros, Harsh Patel
+ * @version 6.0
  */
 public class ReadAllocation {
+	
+	/**
+	 * Reads from file and appends each line representing incident to an ArrayList
+	 * 
+	 * @param file File name to be read from
+	 * @return ArrayList of strings representing incidents being read from the file
+	 * @throws IOException If file is not found 
+	 */
 	public static ArrayList<String> read(String file) throws IOException {
 		ArrayList<String> incidents = new ArrayList<>();
 		try {
@@ -60,6 +69,13 @@ public class ReadAllocation {
 		return incidents;
 	}
 
+	/**
+	 * Builds an ArrayList of incidents ADT
+	 * 
+	 * @param data ArrayList of incidents as strings from file
+	 * @return ArrayList of Incidents ADT
+	 * @throws IOException If file not found
+	 */
 	public static ArrayList<Incidents> buildIncidents(ArrayList<String> data) throws IOException {
 		ArrayList<Incidents> incidents = new ArrayList<>();
 		for (int i = 0; i < data.size(); i++) {
@@ -80,6 +96,14 @@ public class ReadAllocation {
 		return incidents;
 	}
 
+	/**
+	 * Initializes the RedBLackTree with nodes as States and appropriate ArrayList of
+	 * Incidents in each State ADT
+	 * 
+	 * @param incidents ArrayList of incidents ADT
+	 * @return RedBlackTree with nodes as US States with ArrayList of Incidents appropriate
+	 * to that State as value and State name as Key
+	 */
 	public static RedBlackTree<String, States> buildBST(ArrayList<Incidents> incidents) {
 		RedBlackTree<String, States> StateTree = new RedBlackTree<String, States>();
 		int i = 0;
@@ -98,6 +122,15 @@ public class ReadAllocation {
 		return StateTree;
 	}
 
+	/**
+	 * Sort ArrayList of incidents ADT
+	 * 
+	 * @param state US state location to get Incidents list from
+	 * @param userLong Longitude coordinate of users desired location
+	 * @param userLat Latitude coordinate of users desired location
+	 * @return Sorted array list of Incidents based on distance from users 
+	 * desired location
+	 */
 	public static ArrayList<Incidents> SortIncidents(States state, double userLong, double userLat) {
 		ArrayList<Incidents> SortIncidents = state.getIncidentsList();
 		for (int i = 0; i < SortIncidents.size(); i++) {
@@ -110,7 +143,14 @@ public class ReadAllocation {
 
 		return SortIncidents;
 	}
-
+	
+	/**
+	 * Filters Incidents based on Range entered by user from users location
+	 * 
+	 * @param InRangeIncidents Array list of incidents in a certain US State
+	 * @param Range Distance from users desired location in kilometers
+	 * @return ArrayList of incidents that fall within the range set by user
+	 */
 	public static ArrayList<Incidents> filterIncidents(ArrayList<Incidents> InRangeIncidents, double Range) {
 		int sizeofInci = InRangeIncidents.size();
 		ArrayList<Incidents> InRangeIncidents2 = new ArrayList<Incidents>();
@@ -122,6 +162,18 @@ public class ReadAllocation {
 		return InRangeIncidents2;
 	}
 
+	/**
+	 * Prompts user to enter inputs in the form of address, US State, and range which
+	 * initializes the RedBlackTree and gets the ArrayList of incidents from the entered
+	 * US State, and filters the list based on the range. It prints to the console all the
+	 * incidents within the US State that are within the Range entered. It also shows total
+	 * number killed, injured, and number of incidents within the range. Once the program terminates
+	 * the information on the console is written to a text file.
+	 * 
+	 * @param args String arguments from the user from the console
+	 * @throws IOException If file being read is not found
+	 * @throws GeocodingException Google Geocoding exception handling
+	 */
 	public static void main(String args[]) throws IOException, GeocodingException {
 		ArrayList<String> strIncidents;
 		String system;
@@ -134,25 +186,40 @@ public class ReadAllocation {
 			strIncidents = read("Data\\gun-violence-data_01-2013_03-2018.csv");
 		}
 		
-		System.out.println("Building graph tree of States. Give 30 seconds ");
+		System.out.println("Building graph tree of States. Give 30 seconds... ");
 
 		ArrayList<Incidents> Incidents = buildIncidents(strIncidents);
 		RedBlackTree<String, States> StateTree = buildBST(Incidents);
 
 		Scanner user_input = new Scanner(System.in);
+
+        /*
+         * The below code outputs and formats the answers to the questions to a text file as desired
+         */
+		File file = new File("src/incidents_out.txt");
+		FileWriter out = new FileWriter(file,false);
+
+
+		out.write("------------" + "\n");
+		out.write("|DANGER LOG|");
+		out.write("\n" + "------------" + "\n" + "\n");
+	
+
 		do {
 			String address;
 			System.out.print("Enter an address or enter 0 to end program: ");
 			address = user_input.nextLine();
 			
-			if(address.equals("0")) break;
+			if(address.equals("0")) {
+				System.out.println("The results of this session have been sent to incidents_out.txt");
+				break;
+			}
 			
 			String UserState;
 			System.out.print("Enter a State: ");
 			UserState = user_input.nextLine();
 			if(!(StateTree.contains(UserState))) {
 				System.out.println("No Incidents in this area or Wrong Address");
-				//user_input.nextLine();
 				continue;
 			}
 	
@@ -177,14 +244,19 @@ public class ReadAllocation {
 				continue;
 			}
 			int totalKilled = 0, totalInjured = 0;
+			out.write("Gun violence incidents near " + address + " in range " + range + " km: " + "\n");
 			System.out.println("Gun violence incidents near " + address + " in range " + range + " km: ");
+
 			for (int i = 0; i < InRangeIncidents.size(); i++) {
 				System.out.println(InRangeIncidents.get(i).toString());
+				out.write("\n" + InRangeIncidents.get(i).toString());
 				totalKilled = totalKilled + InRangeIncidents.get(i).getnumKilled();
 				totalInjured = totalInjured + InRangeIncidents.get(i).getnumInjured();
 			}
-			
-			System.out.println("");
+			out.write("\n" + "\n" + "Total Incidents: " + InRangeIncidents.size() + "\n" +
+								"Total Killed: " + totalKilled + "\n" +
+								"Total Injured: " + totalInjured);
+
 			System.out.println("Total Incidents: " + InRangeIncidents.size() + "\n" +
 								"Total Killed: " + totalKilled + "\n" +
 								"Total Injured: " + totalInjured);
@@ -201,11 +273,15 @@ public class ReadAllocation {
 				DangerLevel = "HIGH DANGER. Stay Cautious";
 			}
 			System.out.println("");
+			out.write("\n"   + "THE DANGER LEVEL IN THIS AREA IS: " + DangerLevel);
+			
+			out.write("\n" + "----------------------------------------------------------------------------------------------------------------------------------------------------------" +  "\n" + "\n");
 			System.out.println("THE DANGER LEVEL IN THIS AREA IS: " + DangerLevel);
 			System.out.println("");
 			user_input.nextLine();
 		}while(true);
 		user_input.close();
 		askUser.close();
+		out.close();
 	}
 }
